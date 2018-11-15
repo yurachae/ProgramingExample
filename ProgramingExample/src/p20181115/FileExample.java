@@ -15,6 +15,7 @@ public class FileExample {
 		// 파일 객체 생성
 		// 자바 io 패키지 안에 있는 File이라는 클래스
 		// File 클래스의 생성자는 String 값을 받고 그 값은 경로를 받음.
+		
 		File file = new File(path);
 
 		try {
