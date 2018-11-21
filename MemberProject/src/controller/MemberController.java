@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import action.Action;
+import action.MemberIdCheckAction;
 import action.MemberJoinAction;
+import action.MemberListAction;
 import action.MemberLoginAction;
 import vo.ActionForward;
 
@@ -42,6 +44,8 @@ public class MemberController extends HttpServlet {
 
 		String command = RequestURI.substring(ContextPath.length()); // substring()메소드는 잘라낸 문자의 길이 값.
 		// command =/memberJoinAction.me
+		// 로그인 요청하면 : command = /memberLoginAction.me
+		// 회원가입 누르면 = /memberJoin.me 가 남음.
 
 		// 일관성 있게 규정해서 하려고.
 		ActionForward forward = null;
@@ -62,6 +66,8 @@ public class MemberController extends HttpServlet {
 			} catch (Exception e) {
 				System.out.println("회원 가입  Action 에러 : " + e);
 			}
+
+			// DB처리가 필요한 경우에는 이 문법처럼.
 		} else if (command.equals("/memberLoginAction.me")) {
 			action = new MemberLoginAction();
 			try {
@@ -69,24 +75,52 @@ public class MemberController extends HttpServlet {
 			} catch (Exception e) {
 				System.out.println("로그인  Action 에러 : " + e);
 			}
-			//MemberJoinAction에서 넘어옴
-		} else if (command.equals("/memberLogin.me")) { // 회원가입이 정상적으로 처리 되면 loginForm.jsp로 이동함.
+		}
+
+		// 로그인 성공 후 /memberListAction.me 주소 요청에 대한 처리.
+		else if (command.equals("/memberListAction.me")) {// .equals("여기는 주소값을 잘라서 가져올때라 /)
+			action = new MemberListAction();
+			try {
+				forward = action.execute(request, response);
+			} catch (Exception e) {
+				System.out.println("리스트 출력  Action 에러 : " + e);
+			}
+		}
+
+		else if (command.equals("/memberIdCheck.me")) {
+			action = new MemberIdCheckAction();
+			try {
+				forward = action.execute(request, response);
+			} catch (Exception e) {
+				System.out.println("ID 중복체크  Action 에러 : " + e);
+			}
+		}
+
+		// MemberJoinAction에서 넘어옴
+		// 그냥 다른 페이지를 출력하는 경우에 사용하는 문법.
+		else if (command.equals("/memberLogin.me")) { // 회원가입이 정상적으로 처리 되면 loginForm.jsp로 이동함.
 			// memberLogin.me인 주소 값이라면,
 			// 리다이렉트 방식으로 loginForm.jsp로 이동시킴
 			forward = new ActionForward();
 			forward.setRedirect(true);
-			//MemberJoinAction()에서 DB에서 성공하면 호출됨.
+			// MemberJoinAction()에서 DB에서 성공하면 호출됨.
 			forward.setPath("./loginForm.jsp");
-			
-			//MemberLoginAction에서 넘어옴
+
+			// MemberLoginAction에서 넘어옴
 		} else if (command.equals("/memberJoin.me")) { // 로그인 화면에서 회원가입을 누르면 joinForm.jsp(회원가입 화면)으로 이동.
 			forward = new ActionForward();
 			forward.setRedirect(true);
 			forward.setPath("./joinForm.jsp");
-		}else if (command.equals("/memberListAction.me")) {
+
+		} else if (command.equals("/memberCheck.me")) {
 			forward = new ActionForward();
 			forward.setRedirect(true);
-			forward.setPath("./loginList.jsp");
+			forward.setPath("./idCheckForm.jsp"); // ./는 현재 폴더를 유지하면서, 파일 경로.
+		
+		} else if (command.equals("/memberList.me")) {
+			forward = new ActionForward();
+			forward.setRedirect(true);
+			forward.setPath("./memberList.jsp");
 		}
 
 		// 각 Action 클래스 호출 결과인 forward 객체 처리
@@ -97,6 +131,10 @@ public class MemberController extends HttpServlet {
 				// true 라면 리다이렉트를 path에 저장된 위치로 이동함.
 				// redirect 포워딩 방식
 				response.sendRedirect(forward.getPath());
+				// 회원 가입 링크를 클릭했다면, response.sendRedirect("./memberJoin.jsp"); 를 뜻하고
+				// ./ 는 로컬 호스트와 프로젝트를 유지하면서 뒤에 /memberJoin.jsp를 추가하는 것.
+				// 만약 404오류시, 주소 값이 memberJoin.jsp만 있다면 앞에 ./를 지워보고 다시 시도해보기.
+				// 각 action에서 저장된 path에 따라 Redirect를 하기 위한 메소드임을 기억하기.
 			} else {
 				// dispatcher 포워딩 방식
 				RequestDispatcher dispatcher = request.getRequestDispatcher(forward.getPath());

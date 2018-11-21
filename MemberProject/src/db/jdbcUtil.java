@@ -1,4 +1,5 @@
 package db;
+//자바하고 jdbc를 연결하는 클래스.
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

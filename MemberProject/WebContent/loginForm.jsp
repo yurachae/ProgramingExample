@@ -18,9 +18,11 @@
 				<td><input type="password" name="password" id="password" /></td>
 			</tr>
 			<tr>
-				<td>
+				<td colspan=2>
 				<a href="javascript:loginform.submit()">로그인</a>&nbsp;&nbsp;
 				<a href="memberJoin.me">회원가입</a>
+				<!-- 회원가입 버튼을 누르면 주소 값이 : http://localhost:9090/MemberProject/memberJoin.me 으로 찾아가라. -->
+				</td>
 			</tr>
 		</table>
 	</form>
