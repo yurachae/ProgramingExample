@@ -109,21 +109,27 @@ public class MemberDAO {
 		}
 	}
 
-	public boolean memberIdCheck(String checkId) {
+	public boolean memberIdCheck(String id) {
 		String sql = "SELECT ID FROM MEMBER1 WHERE ID=?";
+		System.out.println("DAO의 memberIDCheck메소드로 넘어온 체크할 id: " + id);
 		boolean result = false;
+		String checkid = "";
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, checkId);
+			pstmt.setString(1, id);
+
 			rs = pstmt.executeQuery();
 
-			if (rs != null) {
-				result = true; // 중복 값 있음.
-			} else {
-				result = false; // 중복 값 없음.
+			if (rs.next()) {
+				checkid = rs.getString("id");
+			}
+			if(checkid != null) {
+				result = true;
+			}else {
+				result = false;
 			}
 		} catch (Exception e) {
-			System.out.println("memberIdCheck에서 일어난 오류 : " + e);
+			System.out.println("MemberCheck DAO에서 일어난 예외 : " + e);
 		} finally {
 			try {
 				close(rs);
@@ -133,18 +139,18 @@ public class MemberDAO {
 			}
 		}
 		return result;
-
 	}
 
 	public ArrayList<Member> memberList() {
 		String sql = "SELECT * FROM MEMBER1";
 		ArrayList<Member> memberList = new ArrayList<>();
-		Member member = new Member();
+		Member member = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
+				member = new Member();
 				member.setId(rs.getString("id"));
 				member.setPassword(rs.getString("password"));
 				member.setName(rs.getString("name"));
@@ -167,5 +173,53 @@ public class MemberDAO {
 		}
 		return memberList;
 
+	}
+
+	public Member memberView(String id) {
+		String sql = "SELECT * FROM MEMBER1 WHERE ID=?";
+		Member member = new Member();
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+
+			rs = pstmt.executeQuery();
+			rs.next();
+			member.setId(rs.getString("id"));
+			member.setPassword(rs.getString("password"));
+			member.setName(rs.getString("name"));
+			member.setAge(rs.getInt("age"));
+			member.setGender(rs.getString("gender"));
+			member.setEmail(rs.getString("email"));
+
+			System.out.println("DAO memberView 메소드의 member 객체에 있는 값" + member.toString());
+		} catch (Exception e) {
+			System.out.println("memberView DAO에서 생긴 예외 :" + e);
+		}
+
+		return member;
+	}
+
+	public boolean memberDelete(String id) {
+		String sql = "DELETE FROM MEMBER1 WHERE ID=? ";
+		int result = 0;
+		boolean deleteresult = false;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+
+			// 실행 후 결과 값은 실행한 행의 수.
+			result = pstmt.executeUpdate();
+
+			if (result > 0) {
+				deleteresult = true;
+			} else {
+				deleteresult = false;
+			}
+
+		} catch (Exception e) {
+			System.out.println("memberDelete DAO에서 생긴 예외 :" + e);
+		}
+
+		return deleteresult;
 	}
 }

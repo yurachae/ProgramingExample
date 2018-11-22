@@ -10,10 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import action.Action;
-import action.MemberIdCheckAction;
+import action.MemberDeleteAction;
+import action.MemberCheckAction;
 import action.MemberJoinAction;
 import action.MemberListAction;
 import action.MemberLoginAction;
+import action.MemberViewAction;
 import vo.ActionForward;
 
 //.me로 끝나는 모든 파일을 받음.
@@ -47,6 +49,7 @@ public class MemberController extends HttpServlet {
 		// 로그인 요청하면 : command = /memberLoginAction.me
 		// 회원가입 누르면 = /memberJoin.me 가 남음.
 
+		System.out.println("id넘긴 :"+command);
 		// 일관성 있게 규정해서 하려고.
 		ActionForward forward = null;
 		Action action = null; // Action은 인터페이스.
@@ -87,12 +90,28 @@ public class MemberController extends HttpServlet {
 			}
 		}
 
-		else if (command.equals("/memberIdCheck.me")) {
-			action = new MemberIdCheckAction();
+		else if (command.equals("/memberCheckAction.me")) {
+			action = new MemberCheckAction();
 			try {
 				forward = action.execute(request, response);
 			} catch (Exception e) {
 				System.out.println("ID 중복체크  Action 에러 : " + e);
+			}
+		}
+		else if(command.equals("/memberViewAction.me")) {
+			action = new MemberViewAction();
+			try {
+				forward = action.execute(request, response);
+			}catch(Exception e) {
+				System.out.println("MemberViewAction 에러 :"+e);
+			}
+		}
+		else if (command.equals("/memberDeleteAction.me")) {
+			action = new MemberDeleteAction();
+			try {
+				forward = action.execute(request, response);
+			}catch(Exception e) {
+				System.out.println("memberDeleteAction 에러 :"+e);
 			}
 		}
 
@@ -115,12 +134,16 @@ public class MemberController extends HttpServlet {
 		} else if (command.equals("/memberCheck.me")) {
 			forward = new ActionForward();
 			forward.setRedirect(true);
-			forward.setPath("./idCheckForm.jsp"); // ./는 현재 폴더를 유지하면서, 파일 경로.
+			forward.setPath("./checkForm.jsp"); // ./는 현재 폴더를 유지하면서, 파일 경로.
 		
 		} else if (command.equals("/memberList.me")) {
 			forward = new ActionForward();
 			forward.setRedirect(true);
 			forward.setPath("./memberList.jsp");
+			
+		} else if(command.equals("/memberView.me")) {
+			forward = new ActionForward();
+			forward.setPath("/memberView.jsp");
 		}
 
 		// 각 Action 클래스 호출 결과인 forward 객체 처리

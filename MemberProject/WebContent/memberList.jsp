@@ -11,39 +11,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-</head>
+</head> 
 <body align="center">
 	<h1>memberList.jsp 페이지</h1>
-	<%
-		ArrayList<Member> memberList = (ArrayList<Member>) session.getAttribute("memberList");
-	%><table>
+
+	
+	<table align="center">
 		<tr>
-			<td colspan=2>회원목록</td>
-			<%
-				for (int i = 0; i < memberList.size(); i++) {
-			%>
-
-		</tr>
-		<tr>
-			<td><a
-				href="memberViewAction.me?id=
-            <%=memberList.get(i).getId()%>">
-					<%=memberList.get(i).getId()%></a></td>
-			<td><a
-				href="memberDeleteAction.me?id=
-            <%=memberList.get(i).getId()%>">
-					삭제</a></td>
-		</tr>
-		<%
-			}
-		%>
-	</table>
-
-
-
-	<table>
-		<tr>
-			<td colspan=2>회원목록 (EL, jstl사용)</td>
+			<td colspan=2>회원목록 </td>
 		</tr>
 		<c:forEach var="member" items="${memberList}">
 			<tr>

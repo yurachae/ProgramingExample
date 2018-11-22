@@ -3,6 +3,7 @@ package action;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import javax.servlet.ServletRequest;
 //세션에 있는 아이디를 확인. 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,10 +35,9 @@ public class MemberListAction implements Action {
 			MemberListService memberListService = new MemberListService();
 			ArrayList<Member> member = memberListService.memberList();
 			
-			//service로 부터 전달받은 리턴 값을 request에 저장.
-			session.setAttribute("memberList", member);
-			System.out.println("request에 저장된 list +"+session.getAttribute("memberList"));
-			forward.setRedirect(true);
+			//service로 부터 전달받은 리턴 값을 request에 저장.			
+			request.setAttribute("memberList", member);
+			System.out.println("request에 저장된 list +"+request.getAttribute("memberList"));
 			forward.setPath("./memberList.jsp");					
 		}
 		

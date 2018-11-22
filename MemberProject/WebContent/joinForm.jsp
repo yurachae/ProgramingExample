@@ -9,8 +9,8 @@
 <body>
 <!-- 새창 -->
 <script>
-function showPopup(){
-	window.open('./memberCheck.me','중복체크','width=200',height='100');
+function showPopup(){/* memberCheck.me 는 checkForm.jsp로 넘어감 */
+	window.open('./memberCheck.me','중복체크','width=300,height=200');
 }
 </script>
 	<!-- 아이디, 비밀번호, 이름, 나이, 성별, 이메일 주소를 입력. -->
@@ -23,7 +23,7 @@ function showPopup(){
 					<input type="text" name="id" placeholder="Id" required />
 				</td>
 				<td>				
-					<input type="button" value="중복체크" class=".check" onclick='showPopup()' />
+					<input type="button" value="중복체크" onclick='showPopup()' />
 				</td>
 			</tr>
 
