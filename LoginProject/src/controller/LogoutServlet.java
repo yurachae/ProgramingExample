@@ -19,7 +19,7 @@ public class LogoutServlet extends HttpServlet {
 			throws ServletException, IOException {
     	//session 영역 close
     	HttpSession session = request.getSession();	//세션 객체 만듬. 정보가 유지되는. 
-		session.invalidate();
+		session.invalidate();//세션 종료.
     	
 		// loginform.jsp로 넘김.
 		response.sendRedirect("loginform.jsp");
